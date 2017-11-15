@@ -16,6 +16,7 @@
        android:layout_height="wrap_content"
        android:id="@+id/cabecalho">
 
+
        <TextView
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
@@ -33,27 +34,55 @@
         android:layout_above="@+id/rodape">
 
 
-        <ViewSwitcher
-            android:id="@+id/switcher"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:onClick="alterarStatus"
-            android:inAnimation="@anim/fade_in"
-            android:outAnimation="@anim/fade_out">
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:src="@drawable/desligada"/>
+            <ViewSwitcher
+                android:id="@+id/switcher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:onClick="alterarStatus"
+                android:inAnimation="@anim/fade_in"
+                android:outAnimation="@anim/fade_out">
 
-            <ImageView
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:src="@drawable/ligada"/>
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:src="@drawable/desligada"/>
+
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:src="@drawable/ligada"/>
 
 
-        </ViewSwitcher>
+            </ViewSwitcher>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                   style="@style/botao"
+                    android:text="Ligar"
+                   />
+
+                <TextView
+                    style="@style/botao"
+                    android:text="Desligar"
+                    />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+
 
     </RelativeLayout>
 
