@@ -85,9 +85,24 @@ O script que dirige o emulador está em [`scripts/screenshots.sh`](scripts/scree
 e falha o build se aparecer uma exceção fatal no logcat — então ele também
 serve de teste de fumaça da inicialização.
 
-Para **interagir** de fato sem aparelho, use o APK publicado pelo CI num
-emulador de navegador (Appetize.io tem plano gratuito; BrowserStack App Live
-tem período de teste).
+## Usando o app de verdade sem ter um Android
+
+Ver não é testar. Para **tocar na tela** sem um aparelho Android, rode o APK num
+emulador de navegador — funciona em iPad, iPhone ou qualquer máquina.
+
+O caminho curto: o workflow **Release de demonstração** (Actions → Run workflow)
+publica o APK como asset de release, o que dá uma URL pública e direta:
+
+```
+https://github.com/ramasousa/AndroidMQTT/releases/download/demo/pulso-demo.apk
+```
+
+Serviços como Appetize.io e BrowserStack App Live aceitam essa URL e sobem um
+Android dentro do navegador. Sem ela, o APK fica preso num zip de artefato que
+exige login no GitHub — e é por isso que o workflow existe.
+
+O caminho sem publicar nada: baixe o artefato `pulso-debug-apk` do CI,
+descompacte e envie o `.apk` pelo próprio formulário do serviço.
 
 ## Arquitetura
 
