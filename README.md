@@ -57,6 +57,34 @@ ESP8266 do projeto de 2017, que respondia a `"1"` e `"0"` no tópico `led`), o
 
 Requisitos: JDK 17+, Android SDK 36. O núcleo compila com Gradle e JDK apenas.
 
+## Vendo o app rodar sem ter um Android
+
+O workflow **Screenshots** sobe um emulador na nuvem, instala o app, navega
+pelas telas e publica as imagens e um vídeo como artefato do build. Abre em
+qualquer navegador — inclusive num iPhone.
+
+Aba **Actions → Screenshots → Run workflow**, ou espere o push. O artefato
+`pulso-em-execucao` traz:
+
+```
+01-dashboard.png              a casa simulada já povoada
+02-detalhe-dispositivo.png    controle, telemetria e os tópicos reais
+03-automacoes.png             regras e histórico de disparos
+04-inspetor.png               tráfego MQTT cru
+05-ajustes.png                broker, TLS, descoberta
+06-dashboard-com-historico.png  depois de a sparkline ter o que desenhar
+pulso.mp4                     o percurso inteiro em vídeo
+logcat-completo.txt           e o log, para quando algo der errado
+```
+
+O script que dirige o emulador está em [`scripts/screenshots.sh`](scripts/screenshots.sh)
+e falha o build se aparecer uma exceção fatal no logcat — então ele também
+serve de teste de fumaça da inicialização.
+
+Para **interagir** de fato sem aparelho, use o APK publicado pelo CI num
+emulador de navegador (Appetize.io tem plano gratuito; BrowserStack App Live
+tem período de teste).
+
 ## Arquitetura
 
 ```mermaid
