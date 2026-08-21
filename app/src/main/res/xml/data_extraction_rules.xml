@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Regras de backup para Android 12+.
+
+  Semântica que vale entender: havendo qualquer <include>, o que não foi
+  incluído está excluído. Por isso incluímos só `files/datastore/` — onde vivem
+  as preferências do broker — e nada mais.
+
+  Consequência desejada: `pulso_secrets.xml` (SharedPreferences com a senha
+  cifrada) fica de fora sem precisar de <exclude>. E é bom que fique: a chave
+  que decifra aquele arquivo vive no Keystore do aparelho e não viaja no
+  backup, então o texto cifrado restaurado noutro telefone seria lixo.
+-->
 <data-extraction-rules>
     <cloud-backup>
         <include domain="file" path="datastore/" />
-        <exclude domain="sharedpref" path="pulso_secrets.xml" />
     </cloud-backup>
     <device-transfer>
         <include domain="file" path="datastore/" />
-        <exclude domain="sharedpref" path="pulso_secrets.xml" />
     </device-transfer>
 </data-extraction-rules>

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Equivalente para Android 11 e anteriores (`android:fullBackupContent`).
+  Mesma regra do data_extraction_rules.xml: incluir apenas as preferências do
+  broker deixa a senha cifrada de fora por omissão.
+-->
 <full-backup-content>
-    <!-- Preferências do broker podem voltar num aparelho novo... -->
-    <include domain="sharedpref" path="." />
-    <!-- ...mas credenciais, jamais. -->
-    <exclude domain="sharedpref" path="pulso_secrets.xml" />
+    <include domain="file" path="datastore/" />
 </full-backup-content>

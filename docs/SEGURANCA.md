@@ -47,9 +47,14 @@ descontinuado — são trinta linhas e elimina uma dependência morta.
 `@Transient`. Há um teste que falha se ela aparecer no JSON — porque este é o
 tipo de regressão que passa despercebida numa revisão de código.
 
-**Backup restrito.** `backup_rules.xml` e `data_extraction_rules.xml` excluem
-`pulso_secrets.xml` explicitamente. Preferências do broker podem voltar num
-aparelho novo; credenciais, não.
+**Backup restrito por inclusão.** `backup_rules.xml` e
+`data_extraction_rules.xml` incluem apenas `files/datastore/` — as preferências
+do broker. Como a presença de qualquer `<include>` exclui tudo o mais, o
+`pulso_secrets.xml` fica de fora por construção, sem depender de um `<exclude>`
+que alguém possa remover sem perceber. E é bom que fique de fora: a chave que
+decifra aquele arquivo vive no Keystore do aparelho e não viaja no backup, de
+modo que o texto cifrado restaurado noutro telefone seria ilegível de qualquer
+forma. Preferências voltam num aparelho novo; credenciais, não.
 
 **Permissões mínimas.** Quatro, todas usadas: `INTERNET`,
 `ACCESS_NETWORK_STATE`, `FOREGROUND_SERVICE(_DATA_SYNC)`, `POST_NOTIFICATIONS`.
