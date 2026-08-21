@@ -59,7 +59,51 @@ tab() {
 shot() {
   local name="$1"
   adb exec-out screencap -p > "$OUT/$name.png"
+  dump_ui "$name"
   log "capturado: $name.png"
+}
+
+# Uma screenshot prova que algo foi desenhado, não *o quê*. O despejo da
+# árvore de acessibilidade dá os textos da tela — dá para afirmar que a casa
+# apareceu, em vez de torcer para que tenha aparecido.
+dump_ui() {
+  local name="$1"
+  local attempt
+  for attempt in 1 2 3; do
+    if adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; then
+      adb shell cat /sdcard/ui.xml 2>/dev/null \
+        | tr '>' '\n' \
+        | grep -o 'text="[^"]*"' \
+        | sed 's/text="//; s/"$//' \
+        | grep -v '^$' \
+        | sort -u > "$OUT/$name.textos.txt" || true
+      if [ -s "$OUT/$name.textos.txt" ]; then
+        echo "--- textos em $name ---"
+        cat "$OUT/$name.textos.txt"
+        return 0
+      fi
+    fi
+    sleep 2
+  done
+  log "não consegui despejar a árvore de $name"
+  return 0
+}
+
+# Falha o build se a tela não contiver o texto esperado.
+espera_texto() {
+  local arquivo="$OUT/$1.textos.txt"
+  shift
+  local faltando=0
+  local esperado
+  for esperado in "$@"; do
+    if grep -qiF "$esperado" "$arquivo" 2>/dev/null; then
+      echo "  ✓ $esperado"
+    else
+      echo "  ✗ FALTOU: $esperado"
+      faltando=1
+    fi
+  done
+  return "$faltando"
 }
 
 log "Abrindo o app"
@@ -109,5 +153,35 @@ if grep -q "FATAL EXCEPTION" "$OUT/logcat-completo.txt" 2>/dev/null; then
   exit 1
 fi
 
-log "Pronto. Artefatos em $OUT/"
+# ---------------------------------------------------------------------------
+# Asserções
+#
+# Sem isto, o job ficaria verde tirando seis fotos de uma tela em branco. O que
+# se afirma aqui é o percurso inteiro do app funcionando de ponta a ponta: os
+# anúncios de MQTT Discovery chegaram pelo broker em memória, viraram
+# dispositivos no estado da casa, foram agrupados por cômodo e renderizados.
+# ---------------------------------------------------------------------------
+FALHAS=0
+
+log "A casa de demonstração apareceu no dashboard?"
+espera_texto "01-dashboard" \
+  "Lâmpada da sala" \
+  "Temperatura" \
+  "Sala" \
+  "Varanda" || FALHAS=1
+
+log "O inspetor abriu?"
+espera_texto "04-inspetor" "Filtro" "Publicar" || FALHAS=1
+
+log "Os ajustes abriram?"
+espera_texto "05-ajustes" "Broker" "Endereço" "TLS" || FALHAS=1
+
+log "Artefatos em $OUT/"
 ls -la "$OUT"
+
+if [ "$FALHAS" -ne 0 ]; then
+  log "O app subiu sem quebrar, mas alguma tela não trouxe o conteúdo esperado."
+  exit 1
+fi
+
+log "Tudo certo: app instalado, aberto, casa descoberta e telas renderizadas."
