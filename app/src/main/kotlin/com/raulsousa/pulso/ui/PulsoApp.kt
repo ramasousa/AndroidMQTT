@@ -89,11 +89,22 @@ fun PulsoApp(viewModel: PulsoViewModel = viewModel(factory = PulsoViewModel.Fact
                         selected = currentRoute?.hierarchy?.any { it.route == destination.route } == true,
                         onClick = {
                             navController.navigate(destination.route) {
-                                // Sem isto, cada troca de aba empilha uma tela
-                                // nova e o botão "voltar" vira um labirinto.
-                                popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                                // Sem o popUpTo, cada troca de aba empilha uma
+                                // tela nova e o botão "voltar" vira um labirinto.
+                                //
+                                // `saveState`/`restoreState` ficam desligados de
+                                // propósito. Com eles, a pilha guardada da aba
+                                // Casa incluía a tela de detalhe aberta antes —
+                                // e voltar para "Casa" devolvia o usuário ao
+                                // detalhe de um dispositivo em vez da lista da
+                                // casa. Preservar rolagem não compensa aterrissar
+                                // na tela errada; uma aba tem que levar sempre à
+                                // raiz dela.
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = false
+                                }
                                 launchSingleTop = true
-                                restoreState = true
+                                restoreState = false
                             }
                         },
                         icon = { Icon(destination.icon, contentDescription = destination.label) },

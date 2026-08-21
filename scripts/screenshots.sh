@@ -117,6 +117,24 @@ espera_texto() {
   return "$faltando"
 }
 
+# Às vezes o que importa é a tela *não* conter algo — foi assim que se
+# descobriu que a aba Casa devolvia o usuário ao detalhe de um dispositivo em
+# vez da lista da casa.
+recusa_texto() {
+  local arquivo="$OUT/$1.textos.txt"
+  shift
+  local sobrando=0 proibido
+  for proibido in "$@"; do
+    if grep -qiF "$proibido" "$arquivo" 2>/dev/null; then
+      echo "  ✗ NÃO DEVIA ESTAR AQUI: $proibido"
+      sobrando=1
+    else
+      echo "  ✓ sem \"$proibido\""
+    fi
+  done
+  return "$sobrando"
+}
+
 # ---------------------------------------------------------------------------
 # Preparo
 # ---------------------------------------------------------------------------
@@ -214,6 +232,10 @@ espera_texto "04-inspetor" "Filtro" "Publicar" "Assinar" || FALHAS=1
 
 log "Os ajustes abriram?"
 espera_texto "05-ajustes" "Broker" "Endereço" "TLS" "Modo demonstração" || FALHAS=1
+
+log "A aba Casa volta para a lista da casa, e não para o último detalhe aberto?"
+espera_texto "06-dashboard-com-historico" "Tomada da varanda" "Porta de entrada" || FALHAS=1
+recusa_texto "06-dashboard-com-historico" "Tópicos" "Brilho:" || FALHAS=1
 
 log "Artefatos em $OUT/"
 ls -la "$OUT"
