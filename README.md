@@ -63,8 +63,10 @@ O workflow **Screenshots** sobe um emulador na nuvem, instala o app, navega
 pelas telas e publica as imagens e um vídeo como artefato do build. Abre em
 qualquer navegador — inclusive num iPhone.
 
-Aba **Actions → Screenshots → Run workflow**, ou espere o push. O artefato
-`pulso-em-execucao` traz:
+Aba **Actions → Screenshots** (é um workflow separado do CI — o artefato não
+aparece na página do CI). O resultado das asserções e os textos de cada tela
+são publicados no **sumário do job**, legíveis direto no navegador, sem baixar
+nada. O artefato `pulso-em-execucao` traz:
 
 ```
 01-dashboard.png              a casa simulada já povoada
@@ -74,6 +76,8 @@ Aba **Actions → Screenshots → Run workflow**, ou espere o push. O artefato
 05-ajustes.png                broker, TLS, descoberta
 06-dashboard-com-historico.png  depois de a sparkline ter o que desenhar
 pulso.mp4                     o percurso inteiro em vídeo
+*.textos.txt                  o texto de cada tela, lido da árvore de acessibilidade
+resumo.md                     o mesmo relatório do sumário do job
 logcat-completo.txt           e o log, para quando algo der errado
 ```
 

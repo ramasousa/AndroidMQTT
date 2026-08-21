@@ -15,12 +15,27 @@ APK="${APK:-app/build/outputs/apk/debug/app-debug.apk}"
 PKG="${PKG:-com.raulsousa.pulso.debug}"
 ACTIVITY="${ACTIVITY:-com.raulsousa.pulso.MainActivity}"
 OUT="${OUT:-artefatos}"
+RESUMO="${RESUMO:-resumo.md}"
 VIDEO_REMOTE="/sdcard/pulso.mp4"
 UI_LOCAL="/tmp/ui.xml"
 
 mkdir -p "$OUT"
+: > "$RESUMO"
 
 log() { printf '\n\033[1m▸ %s\033[0m\n' "$*"; }
+
+# Tudo que interessa a quem revisa vai para stdout *e* para um resumo em
+# markdown. O resumo é publicado no sumário do job, então o resultado é legível
+# direto na página do GitHub — sem baixar zip, descompactar e abrir imagem, que
+# num celular é um pequeno suplício.
+resumo() { printf '%s\n' "$*" >> "$RESUMO"; }
+
+secao() {
+  log "$*"
+  resumo ""
+  resumo "### $*"
+  resumo ""
+}
 
 # ---------------------------------------------------------------------------
 # Leitura da tela
@@ -109,8 +124,10 @@ espera_texto() {
   for esperado in "$@"; do
     if grep -qiF "$esperado" "$arquivo" 2>/dev/null; then
       echo "  ✓ $esperado"
+      resumo "- ✅ \`$esperado\`"
     else
       echo "  ✗ FALTOU: $esperado"
+      resumo "- ❌ **faltou** \`$esperado\`"
       faltando=1
     fi
   done
@@ -127,9 +144,11 @@ recusa_texto() {
   for proibido in "$@"; do
     if grep -qiF "$proibido" "$arquivo" 2>/dev/null; then
       echo "  ✗ NÃO DEVIA ESTAR AQUI: $proibido"
+      resumo "- ❌ **não devia estar aqui:** \`$proibido\`"
       sobrando=1
     else
-      echo "  ✓ sem \"$proibido\""
+      printf '  ✓ sem %s\n' "$proibido"
+      resumo "- ✅ sem \`$proibido\`"
     fi
   done
   return "$sobrando"
@@ -216,29 +235,69 @@ fi
 # ---------------------------------------------------------------------------
 FALHAS=0
 
-log "A casa de demonstração apareceu no dashboard?"
+secao "A casa de demonstração apareceu no dashboard?"
 espera_texto "01-dashboard" \
   "Lâmpada da sala" "Tomada da varanda" "Temperatura" "Umidade" \
   "Porta de entrada" "Sala" "Varanda" "Entrada" || FALHAS=1
 
-log "O detalhe do dispositivo mostra os tópicos reais?"
+secao "O detalhe do dispositivo mostra os tópicos reais?"
 espera_texto "02-detalhe-dispositivo" "Tópicos" "estado" "comando" || FALHAS=1
 
-log "As automações abriram?"
+secao "As automações abriram?"
 espera_texto "03-automacoes" "Nenhuma automação" || FALHAS=1
 
-log "O inspetor abriu?"
+secao "O inspetor abriu?"
 espera_texto "04-inspetor" "Filtro" "Publicar" "Assinar" || FALHAS=1
 
-log "Os ajustes abriram?"
+secao "Os ajustes abriram?"
 espera_texto "05-ajustes" "Broker" "Endereço" "TLS" "Modo demonstração" || FALHAS=1
 
-log "A aba Casa volta para a lista da casa, e não para o último detalhe aberto?"
+secao "A aba Casa volta para a lista da casa, e não para o último detalhe aberto?"
 espera_texto "06-dashboard-com-historico" "Tomada da varanda" "Porta de entrada" || FALHAS=1
 recusa_texto "06-dashboard-com-historico" "Tópicos" "Brilho:" || FALHAS=1
 
 log "Artefatos em $OUT/"
 ls -la "$OUT"
+
+# ---------------------------------------------------------------------------
+# Sumário do job
+#
+# Os textos de cada tela entram como blocos recolhíveis: é o conteúdo real do
+# app, legível no navegador do celular, sem baixar nada. As imagens e o vídeo
+# continuam no artefato, para quem quiser olhar de perto.
+# ---------------------------------------------------------------------------
+{
+  echo ""
+  echo "### O que apareceu em cada tela"
+  echo ""
+  for arquivo in "$OUT"/*.textos.txt; do
+    [ -e "$arquivo" ] || continue
+    nome="$(basename "$arquivo" .textos.txt)"
+    echo "<details><summary><strong>$nome</strong></summary>"
+    echo ""
+    echo '```'
+    cat "$arquivo"
+    echo '```'
+    echo ""
+    echo "</details>"
+    echo ""
+  done
+  echo "As imagens e o vídeo estão no artefato **pulso-em-execucao**."
+} >> "$RESUMO"
+
+# `GITHUB_STEP_SUMMARY` só existe dentro do Actions; fora dele o resumo fica
+# apenas no arquivo, o que é útil ao rodar este script na própria máquina.
+if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+  {
+    if [ "$FALHAS" -eq 0 ]; then
+      echo "## ✅ Pulso rodou no emulador"
+    else
+      echo "## ❌ Pulso subiu, mas alguma tela veio errada"
+    fi
+    cat "$RESUMO"
+  } >> "$GITHUB_STEP_SUMMARY"
+fi
+cp "$RESUMO" "$OUT/resumo.md" 2>/dev/null || true
 
 if [ "$FALHAS" -ne 0 ]; then
   log "O app subiu sem quebrar, mas alguma tela não trouxe o conteúdo esperado."
