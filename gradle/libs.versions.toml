@@ -1,0 +1,80 @@
+# ---------------------------------------------------------------------------
+# Version catalog — a única fonte de verdade para versões de dependências.
+#
+# Linhas marcadas com (*) foram resolvidas e verificadas contra o Maven Central.
+# As linhas AndroidX/Compose vêm do Google Maven; se você atualizar, rode
+# `./gradlew :app:dependencies` para confirmar que tudo continua resolvendo.
+# ---------------------------------------------------------------------------
+[versions]
+agp = "8.13.0"
+kotlin = "2.4.10"                  # (*)
+ksp = "2.4.10-2.0.2"
+coroutines = "1.11.0"              # (*)
+serialization = "1.11.0"           # (*)
+hivemq = "1.3.17"                  # (*) substitui o Paho Android Service (arquivado)
+turbine = "1.2.1"                  # (*)
+junit = "6.1.3"                    # (*) JUnit 6 BOM (Jupiter)
+
+androidxCore = "1.16.0"
+lifecycle = "2.9.0"
+activityCompose = "1.10.1"
+composeBom = "2025.06.01"
+navigation = "2.9.0"
+datastore = "1.1.7"
+splashscreen = "1.0.1"
+desugar = "2.1.5"
+
+androidxTestJunit = "1.2.1"
+espresso = "3.6.1"
+
+compileSdk = "36"
+minSdk = "26"
+targetSdk = "36"
+
+[libraries]
+# --- Kotlin / async ---------------------------------------------------------
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+
+# --- MQTT -------------------------------------------------------------------
+hivemq-mqtt-client = { module = "com.hivemq:hivemq-mqtt-client", version.ref = "hivemq" }
+
+# --- AndroidX ---------------------------------------------------------------
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
+androidx-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashscreen" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "lifecycle" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+
+# --- Compose (versões vêm do BOM) -------------------------------------------
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+
+# --- Testes -----------------------------------------------------------------
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestJunit" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
+
+# --- Build ------------------------------------------------------------------
+desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

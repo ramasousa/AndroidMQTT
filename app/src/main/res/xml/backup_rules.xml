@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Preferências do broker podem voltar num aparelho novo... -->
+    <include domain="sharedpref" path="." />
+    <!-- ...mas credenciais, jamais. -->
+    <exclude domain="sharedpref" path="pulso_secrets.xml" />
+</full-backup-content>

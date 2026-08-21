@@ -1,3 +1,55 @@
 <resources>
-    <string name="app_name">AndroidMQTT</string>
+    <string name="app_name">Pulso</string>
+    <string name="app_tagline">Central MQTT de bolso</string>
+
+    <string name="nav_dashboard">Casa</string>
+    <string name="nav_inspector">Inspetor</string>
+    <string name="nav_automation">Automações</string>
+    <string name="nav_settings">Ajustes</string>
+
+    <string name="connection_connected">Conectado a %1$s</string>
+    <string name="connection_connecting">Conectando…</string>
+    <string name="connection_reconnecting">Reconectando (tentativa %1$d)…</string>
+    <string name="connection_disconnected">Desconectado</string>
+    <string name="connection_failed">Falha: %1$s</string>
+    <string name="connection_demo">Modo demonstração — casa simulada, sem broker</string>
+
+    <string name="dashboard_empty_title">Nenhum dispositivo ainda</string>
+    <string name="dashboard_empty_body">Assim que algo se anunciar em %1$s, ele aparece aqui. Sem broker à mão? Ligue o modo demonstração nos ajustes.</string>
+
+    <string name="device_unavailable">Indisponível</string>
+    <string name="device_brightness">Brilho</string>
+    <string name="device_last_update">Atualizado %1$s</string>
+    <string name="device_topics">Tópicos</string>
+
+    <string name="inspector_filter_hint">Filtro (ex.: casa/#)</string>
+    <string name="inspector_watch">Assinar</string>
+    <string name="inspector_clear">Limpar trilha</string>
+    <string name="inspector_publish">Publicar</string>
+    <string name="inspector_empty">Nada capturado ainda. Assine um filtro para ver o tráfego.</string>
+
+    <string name="settings_broker">Broker</string>
+    <string name="settings_host">Endereço</string>
+    <string name="settings_port">Porta</string>
+    <string name="settings_tls">Usar TLS</string>
+    <string name="settings_user">Usuário</string>
+    <string name="settings_password">Senha</string>
+    <string name="settings_discovery">Descoberta automática</string>
+    <string name="settings_discovery_prefix">Prefixo de descoberta</string>
+    <string name="settings_demo">Modo demonstração</string>
+    <string name="settings_demo_body">Simula uma casa completa dentro do app. Nada sai do aparelho.</string>
+    <string name="settings_background">Manter conexão em segundo plano</string>
+    <string name="settings_save">Salvar e conectar</string>
+    <string name="settings_saved">Perfil salvo</string>
+
+    <string name="automation_empty">Nenhuma automação. As regras rodam no aparelho, sem nuvem.</string>
+    <string name="automation_history">Últimos disparos</string>
+
+    <string name="notification_channel_name">Conexão MQTT</string>
+    <string name="notification_channel_description">Mantém a sessão com o broker ativa enquanto o app está fechado.</string>
+    <string name="notification_title">Pulso conectado</string>
+    <string name="notification_stop">Desconectar</string>
+
+    <string name="action_back">Voltar</string>
+    <string name="action_retry">Tentar de novo</string>
 </resources>

@@ -1,0 +1,22 @@
+[
+  {
+    "topic": "homeassistant/light/lampada_sala/config",
+    "payload": "{\"name\": \"Lâmpada da sala\", \"unique_id\": \"sim-lampada-sala\", \"state_topic\": \"casa/sala/lampada/estado\", \"command_topic\": \"casa/sala/lampada/set\", \"brightness_state_topic\": \"casa/sala/lampada/brilho\", \"brightness_command_topic\": \"casa/sala/lampada/brilho/set\", \"availability_topic\": \"casa/sala/lampada/disponivel\", \"device\": {\"name\": \"Nó da sala\", \"identifiers\": [\"sim-no-sala\"], \"suggested_area\": \"Sala\", \"manufacturer\": \"Pulso Simulator\"}}"
+  },
+  {
+    "topic": "homeassistant/switch/tomada_varanda/config",
+    "payload": "{\"name\": \"Tomada da varanda\", \"uniq_id\": \"sim-tomada-varanda\", \"stat_t\": \"casa/varanda/tomada/estado\", \"cmd_t\": \"casa/varanda/tomada/set\", \"pl_on\": \"ON\", \"pl_off\": \"OFF\", \"dev\": {\"name\": \"Nó da varanda\", \"sa\": \"Varanda\"}}"
+  },
+  {
+    "topic": "homeassistant/sensor/temperatura_sala/config",
+    "payload": "{\"name\": \"Temperatura\", \"unique_id\": \"sim-temp-sala\", \"state_topic\": \"casa/sala/clima\", \"unit_of_measurement\": \"°C\", \"device_class\": \"temperature\", \"value_template\": \"{{ value_json.temperatura }}\", \"device\": {\"name\": \"Nó da sala\", \"suggested_area\": \"Sala\"}}"
+  },
+  {
+    "topic": "homeassistant/sensor/umidade_sala/config",
+    "payload": "{\"name\": \"Umidade\", \"unique_id\": \"sim-umidade-sala\", \"state_topic\": \"casa/sala/clima\", \"unit_of_measurement\": \"%\", \"device_class\": \"humidity\", \"value_template\": \"{{ value_json.umidade }}\", \"device\": {\"name\": \"Nó da sala\", \"suggested_area\": \"Sala\"}}"
+  },
+  {
+    "topic": "homeassistant/binary_sensor/porta_entrada/config",
+    "payload": "{\"name\": \"Porta de entrada\", \"unique_id\": \"sim-porta-entrada\", \"state_topic\": \"casa/entrada/porta\", \"payload_on\": \"aberta\", \"payload_off\": \"fechada\", \"device_class\": \"door\", \"device\": {\"name\": \"Nó da entrada\", \"suggested_area\": \"Entrada\"}}"
+  }
+]

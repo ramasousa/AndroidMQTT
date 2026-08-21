@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      O tema XML só existe para a splash e para a janela antes do Compose
+      assumir. Todo o resto da aparência é definido em código, em
+      ui/theme/Theme.kt, com Material 3 e cor dinâmica.
+    -->
+    <style name="Theme.Pulso.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.Pulso</item>
+    </style>
+
+    <style name="Theme.Pulso" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/splash_background</item>
+    </style>
+</resources>
