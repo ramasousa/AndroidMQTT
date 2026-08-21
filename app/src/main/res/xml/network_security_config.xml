@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  O app de 2017 falava MQTT em texto puro na porta 80 com um IP fixo. Aqui o
+  padrão é o oposto: tráfego não cifrado é proibido, com exceção explícita das
+  faixas de rede local — onde mora o broker doméstico e o simulador — para que
+  o usuário consiga testar em casa sem precisar emitir certificado.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">10.0.2.2</domain>
+        <domain includeSubdomains="true">127.0.0.1</domain>
+        <domain includeSubdomains="true">local</domain>
+    </domain-config>
+
+    <!--
+      Para um broker com certificado próprio (Mosquitto caseiro, por exemplo),
+      coloque a CA em res/raw/ e descomente:
+
+      <domain-config>
+          <domain includeSubdomains="true">casa.exemplo.com</domain>
+          <trust-anchors>
+              <certificates src="@raw/minha_ca" />
+          </trust-anchors>
+      </domain-config>
+    -->
+</network-security-config>

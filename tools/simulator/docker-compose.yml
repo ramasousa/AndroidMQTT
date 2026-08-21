@@ -1,0 +1,37 @@
+# Sobe uma casa inteira em um comando:
+#
+#   cd tools/simulator && docker compose up
+#
+# - mosquitto: broker MQTT de verdade, porta 1883 (texto) e 9001 (websocket)
+# - devices:   firmwares fictícios que se anunciam por MQTT Discovery
+#
+# O app conecta em 10.0.2.2:1883 a partir do emulador Android, ou no IP da sua
+# máquina a partir de um aparelho na mesma rede.
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: pulso-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "$$SYS/broker/uptime", "-C", "1", "-W", "3"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  devices:
+    image: python:3.12-slim
+    container_name: pulso-devices
+    depends_on:
+      mosquitto:
+        condition: service_healthy
+    volumes:
+      - ./devices.py:/app/devices.py:ro
+    working_dir: /app
+    command: >
+      sh -c "pip install --quiet --no-cache-dir paho-mqtt==2.1.0 &&
+             python devices.py --host mosquitto --port 1883"
+    restart: unless-stopped

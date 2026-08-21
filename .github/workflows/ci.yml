@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GRADLE_OPTS: -Dorg.gradle.daemon=false
+
+jobs:
+  core:
+    name: Núcleo (JVM puro)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      # O núcleo é Kotlin puro: roda sem SDK do Android e sem emulador, em
+      # segundos. É aqui que mora a lógica que realmente pode quebrar.
+      - name: Testes de domínio e MQTT
+        run: ./gradlew :core:domain:test :core:mqtt:test --stacktrace
+
+      - name: Publicar relatórios
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorios-testes
+          path: |
+            core/domain/build/reports/tests/test
+            core/mqtt/build/reports/tests/test
+          if-no-files-found: ignore
+
+  contract:
+    name: Contrato simulador ↔ app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Se alguém mudar um payload em devices.py sem regenerar a fixture, o
+      # teste de contrato passaria contra dados velhos. Aqui o diff denuncia.
+      - name: A fixture de discovery está atualizada?
+        run: |
+          python tools/simulator/devices.py --dump-discovery > /tmp/discovery.json
+          diff -u core/mqtt/src/test/resources/simulator-discovery.json /tmp/discovery.json \
+            || { echo "::error::Fixture desatualizada. Rode: python tools/simulator/devices.py --dump-discovery > core/mqtt/src/test/resources/simulator-discovery.json"; exit 1; }
+
+      - name: Sintaxe do simulador
+        run: python -m py_compile tools/simulator/devices.py
+
+  android:
+    name: App Android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: android-actions/setup-android@v3
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Montar debug
+        run: ./gradlew :app:assembleDebug --stacktrace
+
+      - name: Lint
+        run: ./gradlew :app:lintDebug --stacktrace
+
+      - name: Publicar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulso-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: warn

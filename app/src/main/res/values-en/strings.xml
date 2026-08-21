@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">Pulso</string>
+    <string name="app_tagline">Pocket MQTT control room</string>
+
+    <string name="nav_dashboard">Home</string>
+    <string name="nav_inspector">Inspector</string>
+    <string name="nav_automation">Automations</string>
+    <string name="nav_settings">Settings</string>
+
+    <string name="connection_connected">Connected to %1$s</string>
+    <string name="connection_connecting">Connecting…</string>
+    <string name="connection_reconnecting">Reconnecting (attempt %1$d)…</string>
+    <string name="connection_disconnected">Disconnected</string>
+    <string name="connection_failed">Failed: %1$s</string>
+    <string name="connection_demo">Demo mode — simulated house, no broker</string>
+
+    <string name="dashboard_empty_title">No devices yet</string>
+    <string name="dashboard_empty_body">Anything that announces itself on %1$s shows up here. No broker handy? Turn on demo mode in settings.</string>
+
+    <string name="device_unavailable">Unavailable</string>
+    <string name="device_brightness">Brightness</string>
+    <string name="device_last_update">Updated %1$s</string>
+    <string name="device_topics">Topics</string>
+
+    <string name="inspector_filter_hint">Filter (e.g. home/#)</string>
+    <string name="inspector_watch">Subscribe</string>
+    <string name="inspector_clear">Clear trace</string>
+    <string name="inspector_publish">Publish</string>
+    <string name="inspector_empty">Nothing captured yet. Subscribe to a filter to see traffic.</string>
+
+    <string name="settings_broker">Broker</string>
+    <string name="settings_host">Host</string>
+    <string name="settings_port">Port</string>
+    <string name="settings_tls">Use TLS</string>
+    <string name="settings_user">Username</string>
+    <string name="settings_password">Password</string>
+    <string name="settings_discovery">Auto discovery</string>
+    <string name="settings_discovery_prefix">Discovery prefix</string>
+    <string name="settings_demo">Demo mode</string>
+    <string name="settings_demo_body">Simulates a full house inside the app. Nothing leaves the device.</string>
+    <string name="settings_background">Keep connection in background</string>
+    <string name="settings_save">Save and connect</string>
+    <string name="settings_saved">Profile saved</string>
+
+    <string name="automation_empty">No automations yet. Rules run on-device, no cloud involved.</string>
+    <string name="automation_history">Recent firings</string>
+
+    <string name="notification_channel_name">MQTT connection</string>
+    <string name="notification_channel_description">Keeps the broker session alive while the app is closed.</string>
+    <string name="notification_title">Pulso connected</string>
+    <string name="notification_stop">Disconnect</string>
+
+    <string name="action_back">Back</string>
+    <string name="action_retry">Retry</string>
+</resources>
